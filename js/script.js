@@ -1,8 +1,43 @@
+/* Eventos */
+const inputNombre = document.getElementById('nombre'),
+    inputApellido = document.getElementById('apellido'),
+    inputMaterias = document.getElementById('nMaterias'),
+    btnAgregarAlumno = document.getElementById('nuevoAlumno');
+
+
+
+/* Arrays */
+let alumnos = []
+    
 /* Funciones */
-const suma = (a,b) => a+b; 
-function ingresoMateriasNotas(){ /* Para no repetir tanto */
-    alumnos[(entrada)-1].agregarMaterias()/* Usa la variable entrada-1 en el array alumnos para buscar el indice y luego usa la funcion de clase agregarMaterias*/
+function agregarAlumno(){ /* Esta funcion crea un alumno o lo modifica si ya existe, lugo lo envia al local storage */ 
+    let alumno = new Alumno(inputNombre.value, inputApellido.value, inputMaterias.value);
+    if(!(alumnos.find(objeto => objeto.nombre === alumno.nombre && objeto.apellido === alumno.apellido))){
+        alumnos.push(alumno);
+    }else{
+        let alumnoEncontrado = alumnos.findIndex(objeto => objeto.nombre === alumno.nombre && objeto.apellido === alumno.apellido)
+        alumnos.splice(alumnoEncontrado, 1, alumno);
+    }
+    localStorage.setItem('alumnos', JSON.stringify(alumnos));
 }
+
+function traerAlumnos(){ /* trae los alumnos del local storage ingresados en un uso anterior de la aplicacion al array alumnos */
+    alumnos = alumnos.concat(JSON.parse(localStorage.getItem('alumnos')));
+}
+
+function selectorAlumno(){ /* la consola me tira error script.js:33 Uncaught TypeError: Cannot read properties of null (reading 'nombre')
+at selectorAlumno (script.js:33:27)
+at script.js:74:1 no se por que, ya que si alumnos esta vacio no deberia entrar al if */
+    if(alumnos.length > 0){
+        let divAlumno = document.createElement('div');
+        document.body.appendChild(divAlumno)
+        for(let i = 0; i< alumnos.length; i ++){
+            divAlumno.innerHTML+= `<label for="alumnos">Elige un Alumno:</label><select id="alumnos"></select><br><option value="${alumnos[i].nombre}${alumnos[i].apellido}">${alumnos[i].nombre}${alumnos[i].apellido}</option>`
+        }
+    }
+}
+
+
 /* Clases */
 class Alumno{
     constructor(nombre, apellido, numMaterias){ /* Pide nombre, apellido y el numero de materias que el alumno cursa*/
@@ -28,54 +63,12 @@ class Alumno{
         
     }
 }
-/*Variables */
-let alumnos=[];
-let alumnosTotales ='';
-/*Programa*/
-let cantidadAlumnos = parseInt(prompt('Cuantos alumnos desea ingresar?'));
-for(let i =0; i<cantidadAlumnos; i++){
-    alumnos[i] = new Alumno(prompt('Ingrese el nombre del alumno numero '+(i+1)), prompt('Ingrese el apellido'), prompt('Ingrese el numero de materias'))/* da a elegir al usuario cuantos alumnos quiere ingresar con la variable cantidadAlumnos luego crea un alumno en el indice definidio por "i" */
-}
-for(let i = 0; i<alumnos.length; i++){
-    alumnosTotales+=(i+1)+'. '+alumnos[i].nombre+' '+alumnos[i].apellido+'\n'; /* crea una lista en la variable alumnosTotales */
-}
-let entrada=parseInt(prompt('Elija un alumno por numero y luego se le preguntara que desea hacer con el'+'\n'+alumnosTotales))/*muestra la lista*/
-let opcion= prompt('Ingrese que desea hacer con'+' '+alumnos[(entrada)-1].nombre+' '+alumnos[(entrada)-1].apellido + '\n' +'1. Ingresar materias y notas'+'\n'+ '2. Calcular Promedio' + '\n' + '3. Ver Notas' + '\n' + '4. Buscar nota de una materia'+'\n'+ '5. Salir');
-while (opcion != "5") {
-    switch (opcion) {
-        case '1':
-            ingresoMateriasNotas() /* se llama a la funcion declarada al principio del codigo*/
-            break
-        case '2':
-            if(alumnos[(entrada)-1].nombreMaterias.length == 0 &&  alumnos[(entrada)-1].notasMaterias.length == 0){ /*comprueba si se ingresaron los datos necesarios paracalcular el promedio, si no es asi se pide que se ingresen y luego lo calcula */
-                alert('Debe ingresar los datos de las materias antes')
-                ingresoMateriasNotas() 
-            }
-            alumnos[(entrada)-1].calcularPromedio()
-            alert('El promedio es : ' + alumnos[(entrada)-1].promedio);
-            break
-        case '3':
-            if(alumnos[(entrada)-1].nombreMaterias.length == 0 ||  alumnos[(entrada)-1].notasMaterias.length == 0){ /*parecido al case 2 pero para mostrar las materias y sus notas*/
-                alert('Debe ingresar los datos de las materias antes')
-                ingresoMateriasNotas()
-            }
-            alert('Estas son las materias de: '+alumnos[(entrada)-1].nombre+' '+alumnos[(entrada)-1].apellido+'\n'+alumnos[(entrada)-1].nombreMaterias+'\n'+alumnos[(entrada)-1].notasMaterias)
-            break
-        case '4':
-            let busquedaMateria =prompt('Ingrese el nombre de una materia que quiera buscar:');
-            let materiaEncontrada =alumnos[(entrada)-1].nombreMaterias.find(materia => materia===busquedaMateria); /* usa find para comprobar si existe la materia */
-            if (materiaEncontrada === undefined){ /* si no existe muestra un error */
-                alert('No se encontro materia') 
-            }else{/* si no hay ningun problema busca el indice de materiaEncontrada y usandolo muestra el nombre de la materia y la nota, este codigo se puede mejorar pero lo voy a dejar para despues*/
-                let indiceMateria= alumnos[(entrada)-1].nombreMaterias.indexOf(materiaEncontrada);
-                alert(materiaEncontrada+' '+alumnos[(entrada)-1].notasMaterias[indiceMateria]);
-            }
-            
-            break
-    }
-    if(isNaN(opcion)){ /* si ocpcion no es un numero muestra un alert de error */
-        alert('Debe ingresar un numero')
-        break
-    }
-    opcion= prompt('Ingrese que desea hacer con'+alumnos[(entrada)-1].nombre+' '+alumnos[(entrada)-1].apellido + '\n' +'1. Ingresar notas'+'\n'+ '2. Calcular Promedio' + '\n' + '3. Ver Notas' + '\n' + '4. Buscar nota de una materia'+'\n'+ '5. Salir'); 
-}
+
+/* Listeners */
+
+btnAgregarAlumno.addEventListener('click', agregarAlumno);
+
+
+/* Programa */
+traerAlumnos()
+selectorAlumno()
