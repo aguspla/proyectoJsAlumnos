@@ -93,8 +93,8 @@ class Alumno{
         this.nombre = nombre;
         this.apellido = apellido;
         this.numMaterias= parseInt(numMaterias); 
-        this.nombreMaterias = []
-        this.notasMaterias = []
+        this.nombreMaterias = [];
+        this.notasMaterias = [];
         this.promedio = 0;
     }
     agregarMaterias(){
