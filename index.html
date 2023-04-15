@@ -5,11 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proyecto JS</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script defer src="./js/script.js"></script>
 </head>
 <body>
     <h2>Bienvenido</h2>
-    <article>
+    <aside>
         <label for="nombre">Nombre:</label>
         <input type="text" name="nombre" id="nombre">
         <label for="apellido">Apellido:</label>
@@ -20,6 +21,18 @@
         <input type="button" value="Agregar o Modificar Alumno" id="nuevoAlumno">
         <input type="button" value="Importar Alumnos" id="traer">
         <br>
-    </article>
+        <div id="selector">
+            <select id="selecAlumnos">
+                <option id="default">Esperando</option>
+            </select>
+
+        </div>
+        <span id="botonMost"></span>
+        <span id="botonCamb"></span>
+        <br>
+        <span id="cancelar"></span>
+        <span id="guardar"></span>
+    </aside>
+    
 </body>
 </html>
